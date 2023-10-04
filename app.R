@@ -24,8 +24,6 @@ ui <- fluidPage(
                     choices = NULL),
         checkboxGroupInput("refer1", "Wybierz gen referencyjny:",
                     choices = NULL),
-        checkboxGroupInput("refer2", "Inny gen referencyjny:",
-                    choices = NULL),
         selectInput("kontrol","Wybierz próbę kontrolną:",
                     choices = NULL),
       ),
@@ -34,19 +32,14 @@ ui <- fluidPage(
         tabsetPanel(
         tabPanel("Tabela",
           tableOutput("tabela")
-        ),
-        tabPanel("Tabela Cq",
-                 tableOutput("tabela_Cq")
-        ),
-        tabPanel("Tabela Eff",
-                 tableOutput("tabela_Eff")
+         ),
         ),
         tabPanel("Wykres",
           plotOutput("wykres_qpcr"))
     )
     )
 )
-)
+
 
 
 
@@ -73,8 +66,7 @@ server <- function(input, output, session) {
   
 observeEvent(wybor_gen(), {
   if (!is.null(wybor_gen())) {
-    updateCheckboxGroupInput(session, "refer1", choices = colnames(wybor_gen()))
-    updateCheckboxGroupInput(session, "refer2", choices = colnames(wybor_gen()))
+    updateCheckboxGroupInput(session, "refer1", choices = colnames(wybor_gen())[-c(1,2)])
     updateSelectInput(session, "kontrol", choices = select(wybor_gen(), "group"))
   }
 })
