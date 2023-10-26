@@ -11,7 +11,7 @@ library(shiny)
 library(tidyverse)
 library(readxl)
 library(openxlsx)
-# PG
+# PG2
 
 # Define UI for application
 ui <- fluidPage(
