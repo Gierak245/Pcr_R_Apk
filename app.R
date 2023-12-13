@@ -37,7 +37,7 @@ ui <- fluidPage(
           tableOutput("tabela")
          ),
         tabPanel("Wykres",
-          plotOutput("wykres_qpcr")
+          plotlyOutput("wykres_qpcr")
           ),
         tabPanel("Tabela z wynikami qPCR",
                  actionButton("przycisk", "qpcr"),
@@ -167,11 +167,22 @@ observeEvent(wybor_gen(), {
     })
   })
   
-  output$wykres_qpcr <- renderPlot(
-    ggplotly(ggplot(qpcr_results, aes(expression.sample)) +
-               geom_bar()
+wide_gen <- reactive({
+  df <- as.data.frame(qpcr_results()[1:2]) |> 
+    rename("sample" = "expression.sample") |> select(-sd.sample)
+  
+  result <- pivot_longer(df, cols = -sample, names_to = c(".value", "Gene"), names_sep =  "\\.")
+  return(result)
+})
+
+output$wykres_qpcr <- renderPlotly({
+  ggplotly(
+    ggplot(wide_gen(), aes(x = sample, y = expression, fill = Gene)) +
+      geom_col(position = position_dodge(width = 0.8)) +
+      geom_errorbar(aes(ymin = expression - sd, ymax = expression + sd), position = position_dodge(width = 0.8),size = 3) +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
   )
-)
+})
   
   
   
