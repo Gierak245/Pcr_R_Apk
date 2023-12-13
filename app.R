@@ -12,6 +12,7 @@ library(tidyverse)
 library(readxl)
 library(openxlsx)
 library(psych)
+library(plotly)
 
 # Define UI for application
 ui <- fluidPage(
@@ -40,7 +41,8 @@ ui <- fluidPage(
           ),
         tabPanel("Tabela z wynikami qPCR",
                  actionButton("przycisk", "qpcr"),
-                 uiOutput("wyniki")
+                 uiOutput("wyniki"),
+                 uiOutput("wyniki2")
                  )
         
       )
@@ -152,21 +154,44 @@ observeEvent(wybor_gen(), {
     colnames(exp_summary) <- names
     colnames(exp_sd) <- names
     results <- list(expression = exp_summary, sd = exp_sd)
-    return(results)
   }
 
+  qpcr_results <- reactive(qPCR.expression(my_reads = my_reads(), linreg_effic = linreg_effic(), normalize = normalize(), reference = reference()))
+  
   observeEvent(input$przycisk, {output$wyniki <- renderUI({
-    if (length(reference()) >= 2) {
-      return(tableOutput("qpcr_table"))
+    if (length(reference()) >= 1) {
+      return(tableOutput("qpcr_table1"))
     } else {
       return(textOutput("wymogi"))
       }
     })
   })
   
-  output$qpcr_table <- renderTable({
-    (qPCR.expression(my_reads = my_reads(), linreg_effic = linreg_effic(), normalize = normalize(), reference = reference()))
-  }, digits = 12)
+  output$wykres_qpcr <- renderPlot(
+    ggplotly(ggplot(qpcr_results, aes(expression.sample)) +
+               geom_bar()
+  )
+)
+  
+  
+  
+  observeEvent(input$przycisk, {output$wyniki2 <- renderUI({
+    if (length(reference()) >= 1) {
+      return(tableOutput("qpcr_table2"))
+    } else {
+      return(textOutput("wymogi"))
+    }
+  })
+  })
+  
+  
+  output$qpcr_table1 <- renderTable({
+    (qpcr_results()[1])
+  }, digits = 3)
+  
+  output$qpcr_table2 <- renderTable({
+    (qpcr_results()[2])
+  }, digits = 3)
   
   output$wymogi <- renderText({
     paste("Wybierz więcej genów referencyjnych!")
