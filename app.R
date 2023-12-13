@@ -13,7 +13,6 @@ library(readxl)
 library(openxlsx)
 library(psych)
 library(plotly)
-
 # Define UI for application
 ui <- fluidPage(
 
