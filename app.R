@@ -163,8 +163,7 @@ observeEvent(wybor_gen(), {
   
   observeEvent(input$przycisk, {output$wyniki <- renderUI({
     if (length(reference()) >= 1) {
-      return(tableOutput("qpcr_table1",
-                         caption = "Expression"))
+      return(tableOutput("qpcr_table1"))
     } else {
       return(textOutput("wymogi"))
       }
