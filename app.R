@@ -28,6 +28,7 @@ ui <- fluidPage(
                     choices = NULL),
         selectInput("kontrol","Wybierz próbę kontrolną:",
                     choices = NULL),
+        downloadButton('downloadData', 'Pobierz dane:')
       ),
      
       mainPanel(
@@ -40,8 +41,11 @@ ui <- fluidPage(
           plotlyOutput("wykres_qpcr")
           ),
         tabPanel("Tabela z wynikami qPCR",
-                 actionButton("przycisk", "qpcr"),
+                 actionButton("przycisk", "qPCR"),
+                 br(),
+                 h3(uiOutput("Expression")),
                  uiOutput("wyniki"),
+                 h3(uiOutput("Sd")),
                  uiOutput("wyniki2")
                  )
         
@@ -160,7 +164,8 @@ observeEvent(wybor_gen(), {
   
   observeEvent(input$przycisk, {output$wyniki <- renderUI({
     if (length(reference()) >= 1) {
-      return(tableOutput("qpcr_table1"))
+      return(tableOutput("qpcr_table1",
+                         caption = "Expression"))
     } else {
       return(textOutput("wymogi"))
       }
@@ -179,7 +184,7 @@ output$wykres_qpcr <- renderPlotly({
   ggplotly(
     ggplot(wide_gen(), aes(x = sample, y = expression, fill = Gene)) +
       geom_col(position = position_dodge(width = 0.8)) +
-      geom_errorbar(aes(ymin = expression - sd, ymax = expression + sd), position = position_dodge(width = 0.8),size = 3) +
+      geom_errorbar(aes(ymin = expression - sd, ymax = expression + sd), position = position_dodge(width = 0.8),linewidth = 3) +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
   )
 })
@@ -192,24 +197,61 @@ output$wykres_qpcr <- renderPlotly({
     } else {
       return(textOutput("wymogi"))
     }
-  })
+    })
   })
   
   
   output$qpcr_table1 <- renderTable({
-    (qpcr_results()[1])
+    df <- as.data.frame(qpcr_results()[1])
+    colnames(df) <- substring(colnames(df), 12)
+    return(df)
   }, digits = 3)
   
   output$qpcr_table2 <- renderTable({
-    (qpcr_results()[2])
+    df <- as.data.frame(qpcr_results()[2])
+    colnames(df) <- substring(colnames(df), 4)
+    return(df)
   }, digits = 3)
   
   output$wymogi <- renderText({
     paste("Wybierz więcej genów referencyjnych!")
   })
   
- 
-
+  output$expr <- renderText({
+    "Expression"
+  })
+  
+  output$sds <-  renderText({
+    "SD"
+  })
+  observeEvent(input$przycisk, {output$Expression <- renderUI({
+    if (length(reference()) >= 1) {
+      return(textOutput("expr"))
+    } else {
+      return(NULL)
+    }
+    })
+  })
+  observeEvent(input$przycisk, {output$Sd <- renderUI({
+    if (length(reference()) >= 1) {
+      return(textOutput("sds"))
+    } else {
+      return(NULL)
+    }
+  })
+  })
+  
+  output$downloadData <- downloadHandler(
+    filename = function() { 
+      "Results.txt"
+    },
+    content = function(file) {
+      if (!is.null(wide_gen())) {
+        write.csv(wide_gen(), file)
+      }
+    }
+  )
+  
 }
 
 # Run the application 
