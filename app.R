@@ -103,7 +103,11 @@ observeEvent(wybor_gen(), {
   })
   normalize <- reactive({input$kontrol})
   reference <- reactive({c(input$refer1)})  
-
+  
+  # Author: Kinga Golebiewska
+  # This is a function for calculation of normalized expression data from
+  # qPCR results. The output is similar to the easyqPCR's one - a list with expression
+  # values and sd.
   qPCR.expression <- function(my_reads, linreg_effic, normalize, reference) {
     require(dplyr); require(psych); require(data.table)
     my_reads$sample <- factor(my_reads$sample)
