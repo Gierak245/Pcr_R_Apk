@@ -13,8 +13,7 @@ PCR Analyzer & Visualizer is a  R application designed to facilitate the analysi
 1. Clone or download this repository to your local machine.
 2. Ensure you have R and RStudio installed on your system.
 3. Open `app.R` in RStudio.
-4. Install required packages by running `install.packages("package_name")` for each package listed in `dependencies.R`.
-5. Launch the application by running `shiny::runApp()`.
+4. Launch the application by running `shiny::runApp()`.
 
 ## Usage
 1. Load your PCR data using the provided import functionality.
