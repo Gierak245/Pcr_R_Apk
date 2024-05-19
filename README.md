@@ -31,3 +31,6 @@ PCR Analyzer & Visualizer is a  R application designed to facilitate the analysi
 
 ## Feedback
 It is my first app using Shiny, created during my bachelor studies, so I am more than welcome to any feedback about the PCR Analyzer & Visualizer!
+
+## Acknowledgements
+This application was developed under the supervision of Dr. Hab. Piotr Gawroński and with the utilization of qPCR result analysis functions authored by Kinga Gołębiewska.
