@@ -2,7 +2,6 @@
 
 ## Overview
 PCR Analyzer & Visualizer is a  R application designed to facilitate the analysis and visualization of Polymerase Chain Reaction (PCR) normalized results.
-
 ## Features
 - **Data Import**: Easily import PCR data from Excel or CSV. 
 - **Analysis**: Conduct analysis of PCR results. The output is similar to the easyqPCR's one - a list with expression values and sd.
@@ -31,4 +30,4 @@ PCR Analyzer & Visualizer is a  R application designed to facilitate the analysi
 7. Export your analysis results and visualizations for further use or sharing.
 
 ## Feedback
-We welcome your feedback and suggestions to improve PCR Analyzer & Visualizer!
+It is my first app using Shiny, created during my bachelor studies, so I am more than welcome to any feedback about the PCR Analyzer & Visualizer!
